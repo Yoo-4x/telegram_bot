@@ -2,7 +2,7 @@
 api_id=''
 api_hash=''
 phone=''
-database_encryption_key='changeme1465'
+database_encryption_key='changeme6345'
 # get by tg.get_me()
 userId = ''
 
@@ -16,8 +16,8 @@ echoFuns['list'] = ['listFunctions', 'filters']
 echoFuns['update'] = ['arguExplain', 'message_text']
 
 handler=[
-        'func_handler',
-        'echo_bot_handler',
+        'list_handler',
+        'echo_handler',
         'novel_handler'
 ]
 

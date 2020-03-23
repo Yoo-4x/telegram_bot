@@ -1,5 +1,6 @@
 from login import tg
 from functools import wraps
+import time,sched
 
 def sendMessage(chat_id, text):
     tg.send_message(
@@ -43,3 +44,4 @@ def load(filePath):
 def save(filePath, lines):
     with open(filePath, 'w') as fp:
         fp.writelines([line+'\n' for line in lines])
+

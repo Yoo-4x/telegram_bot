@@ -12,12 +12,12 @@ class interceptor:
     def MessageInDealing(cls, func):
         # 不响应自己发出的消息
         @wraps(func)
-        def wrapper(update):
+        def wrapper(self, update):
             if not cls.__isSelf(update['message']['sender_user_id']):
                 message_content = update['message']['content']
                 message_text = message_content.get('text', {}).get('text', '').lower()
                 message_type = message_content['@type']
                 chat_id = update['message']['chat_id']
 
-                func(chat_id, message_type, message_text)
+                func(self, chat_id, message_type, message_text)
         return wrapper
