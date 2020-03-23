@@ -125,11 +125,8 @@ class func_novel(func):
                         sendMessageByName(user, content[cut * 4000 : (cut+1) * 4000])
         save(self.file_dir + history_path, new)
     def update(self, base_url, path):
-        response = request.urlopen(base_url + path)
-        html = response.read()
-        html = html.decode("gbk")
-
-        soup = bs(html, 'html.parser')
+        response = request.get(base_url + path)
+        soup = bs(html.text, 'html.parser')
         ret = []
         for tag in soup.select('dd > a')[-5:]:
             ret.append(base_url + tag['href'])
