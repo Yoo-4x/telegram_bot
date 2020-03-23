@@ -2,7 +2,7 @@
 api_id=''
 api_hash=''
 phone=''
-database_encryption_key='changeme1234'
+database_encryption_key='changeme1465'
 # get by tg.get_me()
 userId = ''
 
