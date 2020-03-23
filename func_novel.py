@@ -1,5 +1,5 @@
 from func import func
-from urllib import request
+import requests
 from bs4 import BeautifulSoup as bs
 import threading
 import re
@@ -102,11 +102,9 @@ class func_novel(func):
             #防止请求频率过高
             time.sleep(1)
     def getContent(self, url):
-        response = request.urlopen(url)
-        html = response.read()
-        html = html.decode("gbk")
+        req = requests.get(url)
 
-        soup = bs(html, 'html.parser')
+        soup = bs(req.content.decode("gbk"), 'html.parser')
         title = soup.select('h1')[0].get_text()
         content = soup.select('div > #content')[0].get_text()
         content = re.sub('\xa0\xa0\xa0\xa0', '\n', content)
@@ -118,15 +116,15 @@ class func_novel(func):
         if len(history) > 0:
             for url in new:
                 if url not in history:
-                    title, content = getContent(url)
+                    title, content = self.getContent(url)
                     sendMessageByName(user, name + ':' + title)
                     cuts = len(content)//4000
                     for cut in range(cuts+1):
                         sendMessageByName(user, content[cut * 4000 : (cut+1) * 4000])
         save(self.file_dir + history_path, new)
     def update(self, base_url, path):
-        response = request.get(base_url + path)
-        soup = bs(html.text, 'html.parser')
+        req = requests.get(base_url + path)
+        soup = bs(req.content.decode("gbk"), 'html.parser')
         ret = []
         for tag in soup.select('dd > a')[-5:]:
             ret.append(base_url + tag['href'])
