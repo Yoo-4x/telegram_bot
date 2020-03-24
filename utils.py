@@ -4,22 +4,19 @@ import time,sched
 
 
 def sendMessageByName(username, text):
-    chat_id = getUserId(username)
-    sendMessage(chat_id, text)
+    return sendMessage(getUserId(username), text)
 def sendMessage(chat_id, text):
-    _sendMessage(chat_id, text, 'message')
+    return _sendMessage(chat_id, text, 'message')
 
 def sendImageByName(username, text):
-    chat_id = getUserId(username)
-    sendImage(chat_id, text)
+    return sendImage(getUserId(username), text)
 def sendImage(chat_id, text):
-    _sendMessage(chat_id, text, 'image')
+    return _sendMessage(chat_id, text, 'image')
 
 def sendFileByName(username, text):
-    chat_id = getUserId(username)
-    sendFile(chat_id, text)
+    return sendFile(getUserId(username), text)
 def sendFile(chat_id, text):
-    _sendMessage(chat_id, text, 'file')
+    return _sendMessage(chat_id, text, 'file')
 
 def _sendMessage(chat_id, text, mType):
     data = {}
@@ -45,12 +42,20 @@ def _sendMessage(chat_id, text, mType):
                 '@type': 'inputMessageText',
                 'photo': {'@type': 'formattedText', 'text': '发送文件类型错误'},
                 }
-    r = tg._send_data(data, block=True)
+    return tg._send_data(data, block=True)
 
+def MessageReadedByName(username, message_id):
+    return MessageReaded(getUserId(username), message_id)
+def MessageReaded(chat_id, message_id):
+    r = tg.call_method('getChat', params={'chat_id': chat_id}, block=True)
+    if r.update['last_read_outbox_message_id'] >= message_id:
+        return True
+    else:
+        return False
+    
 def getUsername(chat_id):
     result = tg.call_method('getUser', params={'user_id': chat_id}, block=True)
     return result.update['username']
-
 def getUserId(username):
     result = tg.call_method('searchPublicChat', params={'username': username}, block=True)
     return result.update['id']
