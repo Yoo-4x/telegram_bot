@@ -2,16 +2,50 @@ from login import tg
 from functools import wraps
 import time,sched
 
-def sendMessage(chat_id, text):
-    tg.send_message(
-        chat_id=chat_id,
-        text=text,
-    )
 
 def sendMessageByName(username, text):
-    result = tg.call_method('searchPublicChat', params={'username': username}, block=True)
-    chat_id = result.update['id']
+    chat_id = getUserId(username)
     sendMessage(chat_id, text)
+def sendMessage(chat_id, text):
+    _sendMessage(chat_id, text, 'message')
+
+def sendImageByName(username, text):
+    chat_id = getUserId(username)
+    sendImage(chat_id, text)
+def sendImage(chat_id, text):
+    _sendMessage(chat_id, text, 'image')
+
+def sendFileByName(username, text):
+    chat_id = getUserId(username)
+    sendFile(chat_id, text)
+def sendFile(chat_id, text):
+    _sendMessage(chat_id, text, 'file')
+
+def _sendMessage(chat_id, text, mType):
+    data = {}
+    data['@type'] = 'sendMessage'
+    data['chat_id'] = chat_id
+    if mType == 'message':
+        data['input_message_content'] = {
+                '@type': 'inputMessageText',
+                'text': {'@type': 'formattedText', 'text': text},
+                }
+    elif mType == 'image':
+        data['input_message_content'] = {
+                '@type': 'inputMessagePhoto',
+                'photo': {'@type': 'inputFileLocal', 'path': text},
+                }
+    elif mType == 'file':
+        data['input_message_content'] = {
+                '@type': 'inputMessageDocument',
+                'document': {'@type': 'inputFileLocal', 'path': text},
+                }
+    else:
+        data['input_message_content'] = {
+                '@type': 'inputMessageText',
+                'photo': {'@type': 'formattedText', 'text': '发送文件类型错误'},
+                }
+    r = tg._send_data(data, block=True)
 
 def getUsername(chat_id):
     result = tg.call_method('getUser', params={'user_id': chat_id}, block=True)
