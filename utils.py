@@ -1,7 +1,6 @@
 from login import tg
 from functools import wraps
-import time,sched
-
+import time,sched 
 
 def sendMessageByName(username, text):
     return sendMessage(getUserId(username), text)
@@ -52,7 +51,9 @@ def MessageReaded(chat_id, message_id):
         return True
     else:
         return False
-    
+def fileDownload(remote_file_id, priority=2, synchronous=False):
+    result = tg.call_method('getRemoteFile', params={'remote_file_id':remote_file_id}, block=True)
+    tg.call_method('downloadFile', params={'file_id':result.update['id'], 'priority':priority, 'synchronous':synchronous}, block=True)
 def getUsername(chat_id):
     result = tg.call_method('getUser', params={'user_id': chat_id}, block=True)
     return result.update['username']
