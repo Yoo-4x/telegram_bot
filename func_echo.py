@@ -21,7 +21,8 @@ class func_echo(func):
     '''
 
     @interceptor.MessageInDealing
-    def func_handler(self, chat_id, message_type, message_text):
+    def func_handler(self, chat_id, message_type, message_text, message_id):
+        self.message_id = message_id
 
         if  message_type == 'messageText':
             if re.search('^/echo.*', message_text):
@@ -35,7 +36,7 @@ class func_echo(func):
                 listFunctions(chat_id, echoFuns, '')
             for key, text in self.filters.items():
                 if re.search('^[^/]?.*'+key+'.*', message_text):
-                    sendMessage(chat_id, text)
+                    sendMessage(chat_id, text, self.message_id)
                     return 0
     '''
     Argu:
@@ -96,4 +97,4 @@ class func_echo(func):
             text = args[-1]
             self.updateFilter(chat_id, opt, index=index, key=key, text=text)
         except IndexError:
-            sendMessage(chat_id, '请求格式：添加|删除|更新|去关键词,index,key,text')
+            sendMessage(chat_id, '请求格式：添加|删除|更新|去关键词,index,key,text', self.message_id)

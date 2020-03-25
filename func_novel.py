@@ -30,7 +30,8 @@ class func_novel(func):
         p.start()
 
     @interceptor.MessageInDealing
-    def func_handler(self, chat_id, message_type, message_text):
+    def func_handler(self, chat_id, message_type, message_text, message_id):
+        self.message_id = message_id
         if  message_type == 'messageText':
             if re.search('^/nov.*', message_text):
                 self.arguExplain(chat_id, message_text)
@@ -63,7 +64,7 @@ class func_novel(func):
                     name = args[4]
             self.updateConf(chat_id, opt, web, path, index, name)
         except IndexError:
-            sendMessage(chat_id, '请求格式：添加|删除|列出,添加{笔趣阁(www.biduo.cc),目录链接,小说名}| 删除{索引}| 列出')
+            sendMessage(chat_id, '请求格式：添加|删除|列出,添加{笔趣阁(www.biduo.cc),目录链接,小说名}| 删除{索引}| 列出', self.message_id)
     def updateConf(self, chat_id, option, web, path, index, name):
         conf_str = load(self.config)
         conf_json=[]
@@ -77,7 +78,7 @@ class func_novel(func):
             text = ''
             for index, c in enumerate(conf):
                 text += str(index) + " - " + c['name'] + '\n'
-            sendMessage(chat_id, text)
+            sendMessage(chat_id, text, self.message_id)
         else:
             if option == '添加':
                 if web in self.webs:

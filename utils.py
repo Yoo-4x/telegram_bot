@@ -2,25 +2,26 @@ from login import tg
 from functools import wraps
 import time,sched 
 
-def sendMessageByName(username, text):
-    return sendMessage(getUserId(username), text)
-def sendMessage(chat_id, text):
-    return _sendMessage(chat_id, text, 'message')
+def sendMessageByName(username, text, reply=0):
+    return sendMessage(getUserId(username), text, reply)
+def sendMessage(chat_id, text, reply=0):
+    return _sendMessage(chat_id, text, 'message', reply)
 
-def sendImageByName(username, text):
-    return sendImage(getUserId(username), text)
-def sendImage(chat_id, text):
-    return _sendMessage(chat_id, text, 'image')
+def sendImageByName(username, text, reply=0):
+    return sendImage(getUserId(username), text, reply)
+def sendImage(chat_id, text, reply=0):
+    return _sendMessage(chat_id, text, 'image', reply)
 
-def sendFileByName(username, text):
-    return sendFile(getUserId(username), text)
-def sendFile(chat_id, text):
-    return _sendMessage(chat_id, text, 'file')
+def sendFileByName(username, text, reply=0):
+    return sendFile(getUserId(username), text, reply)
+def sendFile(chat_id, text, reply=0):
+    return _sendMessage(chat_id, text, 'file', reply)
 
-def _sendMessage(chat_id, text, mType):
+def _sendMessage(chat_id, text, mType, reply):
     data = {}
     data['@type'] = 'sendMessage'
     data['chat_id'] = chat_id
+    data['reply_to_message_id'] = reply
     if mType == 'message':
         data['input_message_content'] = {
                 '@type': 'inputMessageText',
@@ -54,6 +55,7 @@ def MessageReaded(chat_id, message_id):
 def fileDownload(remote_file_id, priority=2, synchronous=False):
     result = tg.call_method('getRemoteFile', params={'remote_file_id':remote_file_id}, block=True)
     tg.call_method('downloadFile', params={'file_id':result.update['id'], 'priority':priority, 'synchronous':synchronous}, block=True)
+
 def getUsername(chat_id):
     result = tg.call_method('getUser', params={'user_id': chat_id}, block=True)
     return result.update['username']
@@ -61,13 +63,13 @@ def getUserId(username):
     result = tg.call_method('searchPublicChat', params={'username': username}, block=True)
     return result.update['id']
 
-def listFunctions(chat_id, funs, text=''):
+def listFunctions(chat_id, funs, message_id, text=''):
     for index, key in enumerate(funs.keys()):
         if type(funs[key]) == str:
             text += str(index) + " - " + key + ':' + funs[key] + '\n'
         else:
             text += str(index) + " - " + key + ':' + '\n'
-    sendMessage(chat_id, text)
+    sendMessage(chat_id, text, message_id)
 
 
 def load(filePath):

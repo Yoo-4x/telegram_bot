@@ -18,6 +18,7 @@ class interceptor:
                 message_text = message_content.get('text', {}).get('text', '').lower()
                 message_type = message_content['@type']
                 chat_id = update['message']['chat_id']
+                message_id =  update['message']['id']
 
-                func(self, chat_id, message_type, message_text)
+                func(self, chat_id, message_type, message_text, message_id)
         return wrapper
