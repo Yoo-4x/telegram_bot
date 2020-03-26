@@ -1,4 +1,5 @@
 from config import userId
+from time import sleep
 from functools import wraps
 '''
 对Tg服务器的消息进行拦截
@@ -21,4 +22,15 @@ class interceptor:
                 message_id =  update['message']['id']
 
                 func(self, chat_id, message_type, message_text, message_id)
+        return wrapper
+
+    @classmethod
+    def errorAndRetry(cls, func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except:
+                sleep(60)
+                return wrapper(self, *args, **kwargs)
         return wrapper

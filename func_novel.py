@@ -99,9 +99,11 @@ class func_novel(func):
             exit()
         for conf in confs:
             conf = json.loads(conf)
-            self.websit[conf['web']](path=urlparse(conf['path']).path+'/', user=conf['user'], history_path=conf['history'], name=conf['name'])
+            self.websit[conf['web']](path=urlparse(conf['path']), user=conf['user'], history_path=conf['history'], name=conf['name'])
             #防止请求频率过高
             time.sleep(1)
+
+    @interceptor.errorAndRetry
     def getContent(self, url):
         req = requests.get(url)
 
@@ -123,6 +125,7 @@ class func_novel(func):
                     for cut in range(cuts+1):
                         sendMessageByName(user, content[cut * 4000 : (cut+1) * 4000])
         save(self.file_dir + history_path, new)
+    @interceptor.errorAndRetry
     def update(self, base_url, path):
         req = requests.get(base_url + path)
         soup = bs(req.content.decode("gbk"), 'html.parser')
