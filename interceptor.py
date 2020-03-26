@@ -32,5 +32,5 @@ class interceptor:
                 return func(*args, **kwargs)
             except:
                 sleep(60)
-                return wrapper(self, *args, **kwargs)
+                return wrapper(cls, *args, **kwargs)
         return wrapper

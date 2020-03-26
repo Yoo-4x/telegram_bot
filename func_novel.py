@@ -24,10 +24,11 @@ class func_novel(func):
         if not os.path.exists(self.file_dir):
             os.makedirs(self.file_dir)
 
-        p=threading.Thread(target=self.deamon)
+        #p=threading.Thread(target=self.deamon)
         # 为使 ctrl+c 能够正常关闭多线程
-        p.setDaemon(True)
-        p.start()
+        #p.setDaemon(True)
+        #p.start()
+        self.deamon()
 
     @interceptor.MessageInDealing
     def func_handler(self, chat_id, message_type, message_text, message_id):
@@ -99,7 +100,7 @@ class func_novel(func):
             exit()
         for conf in confs:
             conf = json.loads(conf)
-            self.websit[conf['web']](path=urlparse(conf['path']), user=conf['user'], history_path=conf['history'], name=conf['name'])
+            self.websit[conf['web']](path=str(urlparse(conf['path'].path)), user=conf['user'], history_path=conf['history'], name=conf['name'])
             #防止请求频率过高
             time.sleep(1)
 
