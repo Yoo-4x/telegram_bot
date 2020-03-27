@@ -24,11 +24,10 @@ class func_novel(func):
         if not os.path.exists(self.file_dir):
             os.makedirs(self.file_dir)
 
-        #p=threading.Thread(target=self.deamon)
+        p=threading.Thread(target=self.deamon)
         # 为使 ctrl+c 能够正常关闭多线程
-        #p.setDaemon(True)
-        #p.start()
-        self.deamon()
+        p.setDaemon(True)
+        p.start()
 
     @interceptor.MessageInDealing
     def func_handler(self, chat_id, message_type, message_text, message_id):
