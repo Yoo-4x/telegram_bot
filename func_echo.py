@@ -33,7 +33,7 @@ class func_echo(func):
                         elif key == 'update':
                             eval('self.'+func[0])(chat_id=chat_id, text=eval(func[1]))
                         return 0
-                listFunctions(chat_id, echoFuns, message_id, '')
+                listFunctions(chat_id, echoFuns, '', message_id)
             for key, text in self.filters.items():
                 if re.search('^[^/]?.*'+key+'.*', message_text):
                     sendMessage(chat_id, text, self.message_id)
@@ -69,7 +69,7 @@ class func_echo(func):
             after_key = re.sub(text, '', index_key)
             after_key = re.sub('\|\|', '', after_key)
             self.filters[after_key] = self.filters.pop(index_key)
-        listFunctions(chat_id, self.filters, '更新后：\n')
+        listFunctions(chat_id, self.filters, '更新后：\n', self.message_id)
         save(self.conf_path, [json.dumps(self.filters, ensure_ascii=False)])
 
     #text -> 指令,option,index,key,text

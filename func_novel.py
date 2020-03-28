@@ -100,7 +100,7 @@ class func_novel(func):
             exit()
         for conf in confs:
             conf = json.loads(conf)
-            self.websit[conf['web']](path=str(urlparse(conf['path'].path)), user=conf['user'], history_path=conf['history'], name=conf['name'])
+            self.websit[conf['web']](path=str(urlparse(conf['path']).path), user=conf['user'], history_path=conf['history'], name=conf['name'])
             #防止请求频率过高
             time.sleep(1)
 
