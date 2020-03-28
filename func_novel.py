@@ -7,6 +7,7 @@ import os
 import json
 import time,sched
 import threading
+from retrying import retry
 from urllib.parse import urlparse
 from utils import sendMessageByName, sendMessage, getUsername, load, save
 from interceptor import interceptor
@@ -103,7 +104,7 @@ class func_novel(func):
             #防止请求频率过高
             time.sleep(1)
 
-    @interceptor.errorAndRetry
+    @retry(wait_fixed=20000)
     def getContent(self, url):
         req = requests.get(url)
 
@@ -125,7 +126,7 @@ class func_novel(func):
                     for cut in range(cuts+1):
                         sendMessageByName(user, content[cut * 4000 : (cut+1) * 4000])
         save(self.file_dir + history_path, new)
-    @interceptor.errorAndRetry
+    @retry(wait_fixed=20000)
     def update(self, base_url, path):
         req = requests.get(base_url + path)
         soup = bs(req.content.decode("gbk"), 'html.parser')

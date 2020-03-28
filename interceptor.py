@@ -23,14 +23,3 @@ class interceptor:
 
                 func(self, chat_id, message_type, message_text, message_id)
         return wrapper
-
-    @classmethod
-    def errorAndRetry(cls, func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except:
-                sleep(60)
-                return wrapper(cls, *args, **kwargs)
-        return wrapper
