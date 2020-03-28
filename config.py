@@ -5,6 +5,7 @@ phone=''
 database_encryption_key=''
 # get by tg.get_me()
 userId = 
+# 某些功能唯一回复的id
 master = 
 
 # proxy

@@ -30,6 +30,7 @@ class func_novel(func):
         p.setDaemon(True)
         p.start()
 
+    @interceptor.replyOnly
     @interceptor.MessageInDealing
     def func_handler(self, chat_id, message_type, message_text, message_id):
         self.message_id = message_id
