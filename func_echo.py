@@ -29,11 +29,11 @@ class func_echo(func):
                 for key, func in echoFuns.items():
                     if re.search('/echo.*'+key+'.*', message_text):
                         if key == 'list':
-                            eval(func[0])(chat_id=chat_id, funs=eval('self.'+func[1]))
+                            eval(func[0])(chat_id=chat_id, message_id=message_id, funs=eval('self.'+func[1]))
                         elif key == 'update':
                             eval('self.'+func[0])(chat_id=chat_id, text=eval(func[1]))
                         return 0
-                listFunctions(chat_id, echoFuns, '')
+                listFunctions(chat_id, echoFuns, message_id, '')
             for key, text in self.filters.items():
                 if re.search('^[^/]?.*'+key+'.*', message_text):
                     sendMessage(chat_id, text, self.message_id)

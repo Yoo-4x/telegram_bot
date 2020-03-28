@@ -19,7 +19,7 @@ def sendFileByName(username, text, reply=0):
 def sendFile(chat_id, text, reply=0):
     return _sendMessage(chat_id, text, 'file', reply)
 
-@retry(wait_fixed=20000)
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
 def _sendMessage(chat_id, text, mType, reply):
     data = {}
     data['@type'] = 'sendMessage'
@@ -49,23 +49,23 @@ def _sendMessage(chat_id, text, mType, reply):
 
 def MessageReadedByName(username, message_id):
     return MessageReaded(getUserId(username), message_id)
-@retry(wait_fixed=20000)
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
 def MessageReaded(chat_id, message_id):
     r = tg.call_method('getChat', params={'chat_id': chat_id}, block=True)
     if r.update['last_read_outbox_message_id'] >= message_id:
         return True
     else:
         return False
-@retry(wait_fixed=20000)
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
 def fileDownload(remote_file_id, priority=2, synchronous=False):
     result = tg.call_method('getRemoteFile', params={'remote_file_id':remote_file_id}, block=True)
     tg.call_method('downloadFile', params={'file_id':result.update['id'], 'priority':priority, 'synchronous':synchronous}, block=True)
 
-@retry(wait_fixed=20000)
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
 def getUsername(chat_id):
     result = tg.call_method('getUser', params={'user_id': chat_id}, block=True)
     return result.update['username']
-@retry(wait_fixed=20000)
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
 def getUserId(username):
     result = tg.call_method('searchPublicChat', params={'username': username}, block=True)
     return result.update['id']
@@ -73,9 +73,9 @@ def getUserId(username):
 def listFunctions(chat_id, funs, message_id, text=''):
     for index, key in enumerate(funs.keys()):
         if type(funs[key]) == str:
-            text += str(index) + " - " + key + ':' + funs[key] + '\n'
+            text += str(index) + " - " + key + ' ' + funs[key] + '\n'
         else:
-            text += str(index) + " - " + key + ':' + '\n'
+            text += str(index) + " - " + key + ' ' + '\n'
     sendMessage(chat_id, text, message_id)
 
 
