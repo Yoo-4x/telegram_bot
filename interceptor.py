@@ -1,4 +1,4 @@
-from config import userId
+from config import userId, master
 from time import sleep
 from functools import wraps
 '''
@@ -22,4 +22,11 @@ class interceptor:
                 message_id =  update['message']['id']
 
                 func(self, chat_id, message_type, message_text, message_id)
+        return wrapper
+    @classmethod
+    def replyOnly(cls, func):
+        @wraps(func)
+        def wrapper(self, update):
+            if update['message']['sender_user_id'] == master:
+                return func(self, update)
         return wrapper

@@ -1,10 +1,11 @@
 # user information
-api_id='1292929'
-api_hash='09633fa73f19c403cf46190d632e219c'
-phone='+8613258313072'
-database_encryption_key='changeme1234'
+api_id=''
+api_hash=''
+phone=''
+database_encryption_key=''
 # get by tg.get_me()
-userId = 1096857502
+userId = 
+master = 
 
 # proxy
 # proxyTypeHttp or proxyTypeSocks5, proxyTypeMtproto
