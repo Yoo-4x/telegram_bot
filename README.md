@@ -9,11 +9,12 @@
         - gcc 需要 6G,解决方法二选一：
             1. Linux 可使用交换分区满足内存
             2. 换用 clang, clang++
-                - apt-get install clang clang++
-                - CXX=clang++ CC=clang
-                - cmake -DCMAKE_BUILD_TYPE=Release ..
+                - apt-get install clang
+                - cmake CXX=clang++ CC=clang -DCMAKE_BUILD_TYPE=Release ..
     - cmake --build .
+        - cmake CXX=clang++ CC=clang --build .
     - make install
+        - make CXX=clang++ CC=clang install
 - [python-telegram](https://github.com/alexander-akhmetov/python-telegram)
     - pip3 install python-telegram(> 0.11.0), releases 编辑时最高 0.11.0，最新代码并未发行，可通过pip+github 安装，或直接替换 client.py 和 utils.py
 - beautifulsoup4
