@@ -8,8 +8,7 @@ class interceptor:
 
     def __isSelf(sender_id):
         return sender_id == userId
-    def __isMaster(sender_id):
-        return sender_id == master
+    def __isMaster(sender_id): return sender_id == master
     def __isGroup(chat_id):
         return chat_id < 0
 

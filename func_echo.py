@@ -10,9 +10,11 @@ class func_echo(func):
         self.conf_path='./echo'
 
         self.filters = {}
-        for line in  load(self.conf_path):
-            line = json.loads(line)
-            self.filters[list(line.keys())[0]] = list(line.values())[0]
+        conf = load(self.conf_path)
+        if conf:
+            line = json.loads(conf[0])
+            if line:
+                self.filters[list(line.keys())[0]] = list(line.values())[0]
     '''
     massgae handler:
         func:
@@ -29,7 +31,7 @@ class func_echo(func):
                 for key, func in echoFuns.items():
                     if re.search('/echo.*'+key+'.*', message_text):
                         if key == 'list':
-                            eval(func[0])(chat_id=chat_id, message_id=message_id, funs=eval('self.'+func[1]))
+                            eval(func[0])(chat_id=chat_id, message_id=message_id, funs=eval('self.'+func[1]), text='关键词：\n')
                         elif key == 'update':
                             eval('self.'+func[0])(chat_id=chat_id, text=eval(func[1]))
                         return 0

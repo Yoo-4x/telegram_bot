@@ -34,8 +34,9 @@
     - 小说订阅 -> /nov
 
 ## 功能：
-- 自动回复
-- 小说订阅(目前只支持一个网站)
+- 自动回复(echo_handler 实现)
+- 小说订阅(目前只支持一个网站,novel\_handler 实现)
+- 私聊自动转发给 master，回复转发消息后回复给发消息的人(A->robot[message1],robot->master[message1\_forward];master->robot[message\_reply],robot->A[message\_reply\_without\_masterId]. forward\_handler 实现)
 
 在 config.py 内对功能进行增减：
 - funs -> 顶层功能(增减还需要在 main.py 内增减对应的 import)
