@@ -19,7 +19,7 @@ def sendFileByName(username, text, reply=0):
 def sendFile(chat_id, text, reply=0):
     return _sendMessage(chat_id, text, 'file', reply)
 
-#@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
 def _sendMessage(chat_id, text, mType, reply):
     data = {}
     data['@type'] = 'sendMessage'
@@ -69,6 +69,16 @@ def getUsername(chat_id):
 def getUserId(username):
     result = tg.call_method('searchPublicChat', params={'username': username}, block=True)
     return result.update['id']
+
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
+def forwardMessage(chatId, chatId_from, message_id, send_copy=False):
+    result = tg.call_method('forwardMessages', params={'chat_id':chatId, 'from_chat_id':chatId_from, 'message_ids': [message_id], 'send_copy': send_copy}, block=True)
+    return result.update
+
+@retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
+def getMessage(chat_id, message_id):
+    result = tg.call_method('getMessage', params={'chat_id': chat_id, 'message_id': message_id}, block=True)
+    return result.update
 
 def listFunctions(chat_id, funs, text='', message_id=0):
     for index, key in enumerate(funs.keys()):

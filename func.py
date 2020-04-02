@@ -1,4 +1,5 @@
 from interceptor import interceptor
+from abc import abstractmethod
 import threading
 
 class func:
@@ -16,6 +17,7 @@ class func:
     '''
 #    @interceptor.MessageInDealing
 #    @classmethod
+    @abstractmethod
     def func_handler(self, chat_id, message_type, message_text):
         pass
     '''

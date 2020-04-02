@@ -8,6 +8,10 @@ class interceptor:
 
     def __isSelf(sender_id):
         return sender_id == userId
+    def __isMaster(sender_id):
+        return sender_id == master
+    def __isGroup(chat_id):
+        return chat_id < 0
 
     @classmethod
     def MessageInDealing(cls, func):
@@ -24,9 +28,25 @@ class interceptor:
                 func(self, chat_id, message_type, message_text, message_id)
         return wrapper
     @classmethod
-    def replyOnly(cls, func):
+    def isMaster(cls, func):
         @wraps(func)
         def wrapper(self, update):
-            if update['message']['sender_user_id'] == master:
+            if cls.__isMaster(update['message']['sender_user_id']):
+                return func(self, update)
+        return wrapper
+
+    @classmethod
+    def notMaster(cls, func):
+        @wraps(func)
+        def wrapper(self, update):
+            if cls.__isMaster(update['message']['sender_user_id']):
+                return func(self, update)
+        return wrapper
+
+    @classmethod
+    def secretChat(cls, func):
+        @wraps(func)
+        def wrapper(self, update):
+            if not cls.__isGroup(update['message']['chat_id']):
                 return func(self, update)
         return wrapper

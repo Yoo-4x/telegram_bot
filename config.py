@@ -30,6 +30,7 @@ echoFuns['update'] = ['arguExplain', 'message_text']
 handler=[
         'list_handler',
         'echo_handler',
+        'forward_handler',
         'novel_handler'
 ]
 
