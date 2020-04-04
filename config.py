@@ -7,6 +7,8 @@ database_encryption_key=''
 userId = 
 # 某些功能唯一回复的id
 master = 
+# 群组验证，group内为群组id，[int, int...]
+groups= []
 
 # proxy
 # proxyTypeHttp or proxyTypeSocks5, proxyTypeMtproto
@@ -31,6 +33,7 @@ handler=[
         'list_handler',
         'echo_handler',
         'forward_handler',
+        'group_handler',
         'novel_handler'
 ]
 

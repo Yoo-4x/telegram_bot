@@ -7,7 +7,7 @@ class func_forward(func):
 
     @interceptor.secretChat
     @interceptor.MessageInDealing
-    def forward_handler(self, chat_id, message_type, message_text, message_id):
+    def forward_handler(self, chat_id, message_type, message_text, message_id, user_id):
         if chat_id != master:
             forwardMessage(master, chat_id, message_id)
         else:

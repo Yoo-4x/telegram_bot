@@ -4,10 +4,10 @@ from interceptor import interceptor
 from retrying import retry
 import time,sched 
 
-def sendMessageByName(username, text, reply=0):
-    return sendMessage(getUserId(username), text, reply)
-def sendMessage(chat_id, text, reply=0):
-    return _sendMessage(chat_id, text, 'message', reply)
+def sendMessageByName(username, text, reply=0, user_id=0, mention=False):
+    return sendMessage(getUserId(username), text, reply, user_id=user_id, mention=mention)
+def sendMessage(chat_id, text, reply=0, user_id=0, mention=False):
+    return _sendMessage(chat_id=chat_id, text=text, mType='message', reply=reply, user_id=user_id, mention=mention)
 
 def sendImageByName(username, text, reply=0):
     return sendImage(getUserId(username), text, reply)
@@ -20,7 +20,7 @@ def sendFile(chat_id, text, reply=0):
     return _sendMessage(chat_id, text, 'file', reply)
 
 @retry(wait_exponential_multiplier=100, wait_exponential_max=1000)
-def _sendMessage(chat_id, text, mType, reply):
+def _sendMessage(chat_id, text, mType, reply, user_id=0, mention=False):
     data = {}
     data['@type'] = 'sendMessage'
     data['chat_id'] = chat_id
@@ -30,6 +30,9 @@ def _sendMessage(chat_id, text, mType, reply):
                 '@type': 'inputMessageText',
                 'text': {'@type': 'formattedText', 'text': text},
                 }
+        if mention:
+            #data['input_message_content']['text']['text']= '@at \n'+data['input_message_content']['text']['text']
+            data['input_message_content']['text'].update({'entities':[{'@type':'textEntity', 'offset': 0, 'length': len(getUsername(user_id))+6, 'type': {'@type': 'textEntityTypeMentionName', 'user_id': user_id}}]})
     elif mType == 'image':
         data['input_message_content'] = {
                 '@type': 'inputMessagePhoto',
@@ -79,6 +82,28 @@ def forwardMessage(chatId, chatId_from, message_id, send_copy=False):
 def getMessage(chat_id, message_id):
     result = tg.call_method('getMessage', params={'chat_id': chat_id, 'message_id': message_id}, block=True)
     return result.update
+
+def setChatMemberStatusByName(chat_id, username, opt):
+    setChatMemberStatus(chat_id, getUserId(username), opt)
+def setChatMemberStatus(chat_id, user_id, opt):
+    if opt == 'admin':
+        # 管理员
+        status = {'@type': 'chatMemberStatusAdministrator', 'can_change_info': True, 'can_delete_messages': True, 'can_invite_users': True, 'can_restrict_member': True, 'can_pin_messages': True}
+    elif opt == 'ban':
+        # 封禁
+        status = {'@type': 'chatMemberStatusBanned'}
+    elif opt == 'kick':
+        # 踢出群/解除封禁
+        opt = 'chatMemberStatusLeft'
+        status = {'@type': 'chatMemberStatusLeft'}
+    elif opt == 're':
+        # 恢复普通身份
+        status = {'@type': 'chatMemberStatusMember'}
+    elif opt == 'no':
+        status = {'@type': 'chatMemberStatusRestricted', 'is_member': True, 'permissions':{'@type': 'chatPermissions'}}
+        opt = 'chatMemberStatusRestricted'
+    return tg.call_method('setChatMemberStatus', params={'chat_id': chat_id, 'user_id': user_id, 'status': status})
+        
 
 def listFunctions(chat_id, funs, text='', message_id=0):
     for index, key in enumerate(funs.keys()):

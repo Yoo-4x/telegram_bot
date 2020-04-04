@@ -32,7 +32,7 @@ class func_novel(func):
 
     @interceptor.isMaster
     @interceptor.MessageInDealing
-    def func_handler(self, chat_id, message_type, message_text, message_id):
+    def func_handler(self, chat_id, message_type, message_text, message_id, user_id):
         self.message_id = message_id
         if  message_type == 'messageText':
             if re.search('^/nov.*', message_text):
